@@ -1,0 +1,1378 @@
+HSU TUCK SHOP
+COMPLETE UI/UX, FUNCTIONAL LOGIC, DEMO DATA, AND PRODUCTION LIMITATIONS REPORT
+
+Document purpose
+================
+This document is the single consolidated report for the current HSU Tuck Shop
+prototype. It combines:
+
+1. The UI/UX design details for every page.
+2. The current interaction and application logic.
+3. The role-based Student, Staff, and Admin functions.
+4. The local demo data and browser persistence model.
+5. The original list of backend, infrastructure, and production work that is
+   not implemented in this front-end prototype.
+
+The document describes the application as it exists now. It does not claim
+that simulated functions are connected to real university or payment systems.
+
+
+1. PROJECT OVERVIEW
+===================
+
+Project name
+------------
+HSU Tuck Shop
+
+Project type
+------------
+A bilingual, responsive React + Vite front-end prototype for a university tuck
+shop. It demonstrates online browsing, ordering, pickup, rewards, staff order
+fulfilment, and administration.
+
+Primary audiences
+-----------------
+- Students purchasing snacks, drinks, stationery, ice cream, and HSU merch.
+- Staff preparing and handing over orders.
+- Administrators managing inventory, pickup slots, users, and reports.
+
+Current technology
+------------------
+- React 19 for interface components and local state.
+- Vite for development and production builds.
+- TypeScript for data types and component contracts.
+- Tailwind CSS v4 is available through the Vite plugin.
+- Most custom visual styling is implemented in src/index.css.
+- Browser localStorage provides demo persistence.
+- No backend, database, real payment gateway, or real email service is
+  connected.
+
+Current product catalogue
+-------------------------
+- 56 tuck-shop products imported from the supplied product table.
+- 15 HSU merchandise products.
+- 71 products in the combined inventory.
+- Product names are available in English and Traditional Chinese.
+- Product categories are snacks, drinks, stationery, ice cream, and HSU merch.
+- Product images are stored locally under src/assets/products and
+  src/assets/merch.
+
+
+2. DEMO IDENTITY AND ROLES
+==========================
+
+Main demonstration account
+--------------------------
+- Internal ID: u_1
+- Full name: Chan Tai Ming Kevin
+- Username: KC823
+- Email: s123456@hsu.edu.hk
+- Password: Tuck1234
+- Student ID: s123456
+- Programme: BA-AC
+- Year of entrance: 2023
+- Roles: Student, Staff, and Admin
+- Demo wallet: HK$99,999
+- TS Stamps: 7 out of 10
+
+Role model
+----------
+The interface has three selectable views:
+
+Student view
+- Home
+- Product shop and category browsing
+- Search
+- Favourites
+- Cart and checkout
+- Orders
+- TS Stamp rewards
+- HSU merch drop
+- Order for a friend
+- Notifications
+- Account settings
+
+Staff view
+- Staff order board
+- Stock & Price
+- Pickup Slots
+- Notifications
+
+Admin view
+- Admin Analytics
+- Developer/API demonstration
+- Stock & Price
+- Pickup Slots
+- Users and role management
+- Audit Log
+- Notifications
+
+Role switching is a front-end demonstration. The selected view is stored in
+localStorage. It is not secure authorization and must not be treated as access
+control in production.
+
+
+3. DESIGN SYSTEM AND VISUAL LANGUAGE
+====================================
+
+Brand direction
+---------------
+- Friendly campus convenience-store identity.
+- Deep green is the primary brand colour.
+- Milky green and warm neutral surfaces support the main brand colour.
+- Gold is used for highlights, stamps, rewards, and important accents.
+- Red is used for destructive actions, cancellation, and favourite hearts.
+- Rounded cards and controls create a friendly, approachable tone.
+- The custom panda mascot gives the prototype a recognizable campus character.
+
+Typography
+----------
+- Inter is used for general interface copy.
+- Nunito is used for strong display headings and friendly brand emphasis.
+- Noto Sans TC is used for Traditional Chinese content.
+- Headings use bold weights and compact spacing.
+- Supporting labels use smaller sizes, muted colours, and uppercase or
+  letter-spaced treatments where appropriate.
+
+Layout
+------
+- Desktop content is centered inside a maximum-width content container.
+- Major pages use cards, grids, tables, banners, and clear page introductions.
+- The desktop header remains the primary global navigation.
+- Mobile uses a fixed five-item bottom navigation.
+- Staff and admin tables can scroll horizontally on smaller screens.
+- Product grids reduce their column count at tablet and mobile breakpoints.
+- Checkout changes from a split content/summary layout to a single-column
+  mobile layout.
+
+Themes
+------
+- Light theme.
+- Dark theme.
+- System theme, which follows the operating-system preference.
+- Theme choice persists in localStorage.
+- Login pages use a special green-to-light or green-to-black gradient.
+- The Home page keeps its own solid milky-green visual treatment.
+
+Language
+--------
+- English.
+- Traditional Chinese.
+- Language choice persists in localStorage.
+- Product names show a primary language and a secondary translated name.
+- Most controls, status labels, validation messages, and page headings are
+  translated through src/i18n.ts.
+
+Interaction feedback
+--------------------
+- Selected tabs, chips, payments, and pickup slots receive visible active
+  states.
+- Hover states and small card movement reinforce clickability.
+- Buttons use primary, secondary, gold, text-link, and danger treatments.
+- Toast messages communicate actions such as collection, restocking, and demo
+  order reset.
+- Empty states use the panda mascot and a clear next action.
+- Loading states use a compact spinner.
+- Form errors appear beside the relevant input or in an error banner.
+
+Iconography and imagery
+-----------------------
+- Interface icons use a consistent outline SVG style.
+- Password fields use open-eye and closed-eye icons.
+- The panda mascot has full, head/mark, line-art, and shop variants.
+- Earned TS Stamps use borderless panda-head artwork.
+- Product images are local assets rather than remote runtime dependencies.
+
+
+4. GLOBAL NAVIGATION AND SHARED UI
+==================================
+
+Desktop header
+--------------
+- Brand button returns to Home.
+- Home and Merchandise links provide quick student navigation.
+- Compact language and theme selectors are always available.
+- Notification bell displays an unread indicator.
+- Clicking the bell opens a notification dropdown.
+- Clicking anywhere outside the notification dropdown closes it.
+- The cart icon displays a quantity badge in Student view.
+- The account/hamburger control displays the current profile image when one has
+  been uploaded; otherwise it displays KC initials.
+
+Account side drawer
+-------------------
+- Opens from the upper-right account/hamburger control.
+- Displays the live profile image, username, full name, and email.
+- Displays navigation appropriate to the current role.
+- Provides Student, Staff, and Admin view switching.
+- Includes Profile, Order History where relevant, and Logout.
+- Closes when the backdrop or close button is pressed.
+
+Notification dropdown
+---------------------
+- Shows recent notifications.
+- Unread items include a small indicator.
+- "Mark all read" updates state and localStorage.
+- Selecting a notification marks it as read.
+- "View all" opens the full Notifications page.
+- A document-level pointer boundary detects clicks outside and closes the menu.
+
+Mobile bottom navigation
+------------------------
+- Home
+- Search/Shop
+- Cart with quantity badge
+- Orders
+- Account
+- If Account is selected while logged out, the user is sent to Login.
+
+Routing behavior
+----------------
+- The app uses browser history paths without a separate routing package.
+- setPage updates React state, pushes the matching path with history.pushState,
+  scrolls to the top, and responds to browser Back/Forward through popstate.
+- Unknown paths fall back to Home.
+
+Routes
+------
+/
+/shop
+/cart
+/orders
+/account
+/staff
+/admin
+/login
+/register
+/forgot-password
+/reset-password
+/favorites
+/notifications
+/loyalty
+/merch-drop
+/order-for-friend
+/search
+/developer
+/stock
+/slots
+/users
+/audit
+
+
+5. PAGE-BY-PAGE UI/UX AND FUNCTIONAL DETAILS
+============================================
+
+5.1 LOGIN PAGE (/login)
+-----------------------
+Purpose:
+- Authenticate a demo user and establish a local session.
+
+UI/UX:
+- Unified green gradient across the visual and form areas.
+- HSU Tuck Shop branding and panda artwork.
+- Email and password fields.
+- Password visibility toggle with open/closed eye icon.
+- Remember-me option.
+- Forgot-password link.
+- Primary sign-in button.
+- Simulated Google sign-in.
+- Continue-as-guest option.
+- Registration link.
+- Demo credential hint.
+
+Logic:
+- Reads users from hsu-users in localStorage.
+- Matches email and password exactly.
+- Displays an error for invalid credentials.
+- Uses a short timeout to demonstrate a loading state.
+- Successful login updates lastLoginAt, stores hsu-session and hsu-auth, sets
+  the role view to Student, and navigates Home.
+- Google sign-in opens a simulated account chooser; it does not contact Google.
+- Guest continuation is a prototype interaction, not a secure guest account.
+
+
+5.2 REGISTER PAGE (/register)
+-----------------------------
+Purpose:
+- Demonstrate account creation for HSU and non-HSU users.
+
+UI/UX:
+- Uses the same AuthShell and login visual identity.
+- Collects full name, username, email, password, confirmation, and phone.
+- HSU-specific fields include programme, year of entrance, and student ID.
+- Password requirements update live.
+- Validation messages appear beside fields.
+
+Logic:
+- Prevents duplicate username and email values inside localStorage.
+- Validates password length and matching confirmation.
+- Creates a local DemoUser with a generated ID.
+- New users receive Student role, HK$0 wallet, and 0 TS Stamps.
+- Saves the new user in hsu-users.
+- No real account verification or university directory check occurs.
+
+
+5.3 FORGOT PASSWORD PAGE (/forgot-password)
+-------------------------------------------
+Purpose:
+- Demonstrate the start of password recovery.
+
+UI/UX:
+- Email form.
+- Loading state.
+- "Check inbox" confirmation screen.
+- Resend countdown.
+- Back-to-sign-in action.
+- Explicit demo reset-form link.
+
+Logic:
+- Does not send a real email.
+- Shows a simulated confirmation.
+- The demo link advances to the reset form.
+
+
+5.4 RESET PASSWORD PAGE (/reset-password)
+-----------------------------------------
+Purpose:
+- Demonstrate choosing a new password.
+
+UI/UX:
+- New password field.
+- Confirmation field.
+- Password-rule feedback.
+- Save button enabled only when requirements match.
+- Success state and return-to-login action.
+
+Logic:
+- Updates the demo account password in localStorage after a short simulated
+  loading delay.
+- Does not validate a real expiring token.
+
+
+5.5 HOME PAGE (/)
+-----------------
+Purpose:
+- Introduce the service and provide quick paths into shopping and rewards.
+
+UI/UX:
+- Large branded hero with panda mascot.
+- "Shop now" and "Track order" calls to action.
+- Campus-favourite social proof.
+- "What are you craving?" category cards.
+- Featured/popular product cards.
+- HSU merchandise drop banner with countdown.
+- Compact TS Stamp promotional card with a borderless panda head.
+- "View TS Stamp" button.
+
+Logic:
+- Shop Now opens the full shop.
+- Track Order opens Orders.
+- Category cards open Shop with the selected category already active:
+  Snacks, Drinks, Ice Cream, Stationery, or HSU Merchandise.
+- Featured product cards can open details, add to cart, and toggle favourites.
+- "Shop the drop" opens the Shop with HSU Merchandise selected.
+- "View TS Stamp" opens the dedicated TS Stamp page.
+- The Home TS Stamp card intentionally does not duplicate the full stamp
+  progress row.
+
+
+5.6 SHOP / MERCHANDISE PAGE (/shop)
+-----------------------------------
+Purpose:
+- Browse the complete tuck-shop and HSU merchandise catalogue.
+
+UI/UX:
+- Page heading and search field.
+- Category chips: All, HSU Merchandise, Snacks, Drinks, Ice Cream, Stationery.
+- Merchandise information banner when All or HSU Merchandise is selected.
+- Desktop filter panel with availability, price range, and special filters.
+- Product grid with image, bilingual name, category, price, stock badge,
+  favourite heart, and Add button.
+- Purchase information appears for merchandise views.
+- Empty-state design appears when no products match.
+
+Logic:
+- Category selection filters the combined inventory.
+- Category links from Home preselect the corresponding chip.
+- Search filters the currently displayed language name.
+- Products with active=false are hidden from the student shop.
+- Stock, price, image, enabled state, and deletion reflect the persisted shared
+  inventory edited in Stock & Price.
+- Clicking a product image/name opens Product Detail.
+- Add increments the product quantity in cart state.
+- Favourite toggles update hsu-favs.
+
+Notes:
+- Some desktop filter controls are visual demonstrations and are not all wired
+  to catalogue filtering.
+- Sorting controls are present as UI but do not currently reorder products.
+
+
+5.7 PRODUCT DETAIL MODAL
+------------------------
+Purpose:
+- Present detailed information without leaving the catalogue.
+
+UI/UX:
+- Large product image.
+- Bilingual product name.
+- Price and product details.
+- Stock warning.
+- Quantity stepper.
+- Favourite heart that fills red when active.
+- Add-to-cart action.
+- Merchandise-only notes, pickup information, style selector, or size selector.
+
+Logic:
+- Opens from ProductCard.
+- Clicking the overlay background or Close dismisses the modal.
+- Quantity cannot be reduced below 1.
+- Favourite state is loaded from and saved to hsu-favs.
+- Merchandise can expose style or size choices.
+- Add-to-cart currently adds one cart unit when the modal closes; the visual
+  price reflects the selected quantity, but the cart increment does not
+  multiply by that quantity. This is a prototype limitation.
+
+
+5.8 MY FAVOURITES (/favorites)
+------------------------------
+Purpose:
+- Collect user-selected products in one view.
+
+UI/UX:
+- Product cards with image, bilingual names, and price.
+- Remove action.
+- Panda empty state and Shop Now action when no favourites exist.
+
+Logic:
+- Uses numeric product IDs stored in hsu-favs.
+- Includes both tuck-shop products and HSU merchandise.
+- Removing an item updates localStorage immediately.
+
+
+5.9 SEARCH PAGE (/search)
+-------------------------
+Purpose:
+- Search the combined catalogue from a dedicated page.
+
+UI/UX:
+- Large search field.
+- Responsive product result grid.
+- Bilingual product information.
+- Empty state when no result matches.
+
+Logic:
+- Searches English names case-insensitively.
+- Searches Chinese names by included text.
+- Uses the shared inventory supplied by App.
+
+
+5.10 CART PAGE (/cart)
+----------------------
+Purpose:
+- Review and edit products before checkout.
+
+UI/UX:
+- Cart line items with image, bilingual name, stepper, remove action, and line
+  price.
+- Order summary with subtotal, free pickup, and total.
+- Pickup reminder.
+- Checkout action.
+- Empty-cart state.
+
+Logic:
+- Cart is a map of product ID to quantity in React state.
+- Quantity at or below zero removes the product.
+- Total is calculated from the live shared-inventory prices.
+- The current demo begins with product IDs 102 and 1 in the cart.
+- Cart state is not persisted between browser reloads.
+
+
+5.11 CHECKOUT OVERLAY
+---------------------
+Purpose:
+- Demonstrate a three-step pickup and payment workflow.
+
+Step 1: Pickup
+- Shows the selected pickup location.
+- Displays all configured pickup slots.
+- Full slots are visibly disabled and cannot be selected.
+- Remaining spaces are calculated as capacity minus booked count.
+- If every available slot is full, an explanatory message appears and Continue
+  is disabled.
+- The selected slot controls the location shown in checkout.
+
+Step 2: Payment
+- Provides seven selectable demo methods:
+  HSU Wallet, Octopus, AlipayHK, WeChat Pay HK, PayMe, Visa/Mastercard, and
+  Counter.
+- Every method can be selected.
+- Selected payment receives a clear visual state.
+- HSU Wallet displays the HK$99,999 demo balance.
+- Other methods are marked simulated.
+- No external application or payment provider is launched.
+
+Step 3: Review
+- Shows pickup date/time.
+- Shows pickup location.
+- Shows the selected payment method.
+- Includes a terms confirmation checkbox.
+- Place Order opens the success screen.
+
+Additional logic:
+- Cancel simulated payment opens a confirmation overlay.
+- Completing checkout clears the cart and shows Success.
+- It does not create a new durable order record in the order list.
+- It does not charge any payment provider.
+
+
+5.12 ORDER SUCCESS OVERLAY
+--------------------------
+Purpose:
+- Provide a clear simulated confirmation and pickup credential.
+
+UI/UX:
+- Success icon and confirmation heading.
+- Demo order number #4821.
+- QR-style graphic.
+- Fallback pickup code 7249.
+- Pickup time and location.
+- View Order action.
+
+Logic:
+- The QR is decorative SVG artwork, not a generated scannable order token.
+- Closing the success overlay navigates to Orders.
+
+
+5.13 MY ORDERS PAGE (/orders)
+-----------------------------
+Purpose:
+- Track active orders, review history, cancel eligible orders, and buy again.
+
+UI/UX:
+- Tabs: Active, All, Completed, Cancelled.
+- Status cards with order number, slot, payment total, and status.
+- Ready orders expose View Pickup.
+- Paid orders expose Cancel Order.
+- All orders expose Buy Again.
+- Pickup QR modal shows order number, QR graphic, fallback code, and slot.
+- Cancellation uses a confirmation modal.
+
+Logic:
+- Order states are PAID, PREPARING, READY, COLLECTED, and CANCELLED.
+- Cancelling a PAID order changes it to CANCELLED and shows a simulated refund.
+- Buy Again increments each historical item ID into the current cart, then
+  navigates to Cart.
+- Order changes persist to hsu-orders.
+
+
+5.14 NOTIFICATIONS PAGE (/notifications)
+----------------------------------------
+Purpose:
+- Review and manage order, stock, and loyalty messages.
+
+UI/UX:
+- All and Unread tabs.
+- Mark All Read.
+- Reset All as Unread.
+- Each unread message has a small green circle at the upper-right.
+- No number appears inside the unread circle.
+
+Logic:
+- Clicking a message toggles its read state.
+- Mark All Read sets read=true for every item.
+- Reset All as Unread sets read=false for every item.
+- State persists to hsu-notifications.
+- Initial demo data contains six unread notifications.
+
+
+5.15 TS STAMP PAGE (/loyalty)
+-----------------------------
+Purpose:
+- Explain and visualize the loyalty programme.
+
+UI/UX:
+- Displays 7 / 10 TS Stamps for KC823.
+- Earned stamps use borderless panda-head artwork.
+- Unearned positions use subtle empty circles.
+- Badge grid shows earned and locked achievements.
+- How It Works and Points History sections explain the programme.
+
+Logic:
+- One TS Stamp is earned for every HK$25 in cumulative spending.
+- Ten stamps can be exchanged for a free drink.
+- Current demo progress is HK$175 cumulative spending and seven stamps.
+- Stamp earning and redemption are static demo data; checkout does not
+  calculate or award new stamps automatically.
+
+
+5.16 HSU MERCH DROP PAGE (/merch-drop)
+--------------------------------------
+Purpose:
+- Promote limited-stock HSU products.
+
+UI/UX:
+- Large branded drop banner.
+- Live days/hours/minutes countdown.
+- Panda artwork.
+- Low-stock product cards.
+- Previous drop history.
+
+Logic:
+- Countdown starts from a fixed demo duration and decreases once per second.
+- Displays HSU merchandise with stock of three or fewer.
+- Countdown and drop history are not server-synchronized.
+
+
+5.17 ORDER FOR A FRIEND PAGE (/order-for-friend)
+------------------------------------------------
+Purpose:
+- Demonstrate gifting an order to another person.
+
+UI/UX:
+- Friend name.
+- Friend email.
+- Optional note.
+- Confirmation card with order #4821 and code 7249.
+- Prepared email preview.
+- Copy share details action.
+
+Logic:
+- Submission prepares a simulated email message.
+- The message says a present is waiting for pickup and includes order/code data.
+- Copy Share uses the Clipboard API when available.
+- No real email is sent.
+
+
+5.18 ACCOUNT / SETTINGS PAGE (/account)
+---------------------------------------
+Purpose:
+- Manage profile details, appearance, security demonstrations, roles, and
+  account actions.
+
+UI/UX:
+- Profile hero with photo, user information, and role chips.
+- Profile image upload control.
+- Edit Profile form with username, full name, and phone fields aligned to the
+  same height.
+- Wallet, TS Stamp, and student-information overview.
+- Settings sidebar uses the current uploaded profile image.
+- Appearance and language controls.
+- Accessibility/demo switches.
+- Recent-order summary.
+- Workspace/role switcher.
+- Security and danger-zone sections.
+
+Logic:
+- Image upload uses FileReader and stores a data URL in the user record.
+- The same image updates the header account control, drawer user line, profile
+  hero, settings sidebar, and Users page.
+- Profile save checks local username uniqueness.
+- Password change validates current password and matching new values.
+- Session revocation is a visual local demonstration.
+- Demo wallet credit adds HK$50 locally.
+- Account deletion requires typing DELETE, removes the local user, and logs out.
+- Theme, language, selected view, and some switches persist locally.
+
+
+5.19 STAFF ORDER BOARD (/staff)
+-------------------------------
+Purpose:
+- Demonstrate order preparation and pickup handover.
+
+UI/UX:
+- Summary cards for active orders, ready orders, average prep time, and low
+  stock.
+- Time-slot filter.
+- Order search.
+- Three-column kanban board: Paid, Preparing, Ready.
+- Each order ticket shows number, slot, item count, total, and student ID.
+- Stage-specific full-width action buttons.
+- Pickup-code verification modal.
+- Large, well-spaced Scan QR, Verify & Collect, and red Cancel buttons.
+- Reset Demo Orders button.
+
+Logic:
+- Paid -> Start Preparing -> PREPARING.
+- Preparing -> Mark Ready -> READY.
+- Ready -> Verify & Collect opens code entry.
+- Correct pickup code changes the order to COLLECTED.
+- Wrong code displays an error.
+- Scan QR is a visual demo control and does not access a camera.
+- Search checks order number and student ID.
+- Slot filter limits visible tickets.
+- Order transitions persist to hsu-orders.
+- Reset Demo Orders restores every order to the initial demo stages and saves
+  the reset.
+
+
+5.20 ADMIN ANALYTICS PAGE (/admin)
+----------------------------------
+Purpose:
+- Present an administrative overview and direct access to stock management.
+
+UI/UX:
+- Revenue, order, user, and average-order KPI cards.
+- Daily revenue line/area chart.
+- Sales-category donut chart.
+- Low-stock report with image, bilingual name, quantity, status, and restock.
+- View Inventory link.
+
+Logic:
+- KPI and chart values are static demonstration values.
+- Low-stock rows are derived from shared inventory where stock is less than or
+  equal to threshold.
+- Inline restock adds the entered quantity to shared inventory.
+- Stock changes persist and remain after switching Student/Staff/Admin views.
+- Student product availability and price use the same shared inventory.
+
+
+5.21 STOCK & PRICE PAGE (/stock)
+--------------------------------
+Purpose:
+- Edit the product catalogue and inventory from Staff/Admin views.
+
+UI/UX:
+- Filters: All, Low Stock, Out of Stock.
+- Bulk Restock.
+- Add Product.
+- Explicit Save button.
+- Inventory table with product image, bilingual name, price, stock, and actions.
+- Change Image overlay on each product thumbnail.
+- Enable/Disable, Out of Stock, and Delete Product actions.
+- Save confirmation banner.
+
+Logic:
+- Page starts with a draft copy of the shared inventory.
+- Price and stock inputs edit the draft.
+- Bulk Restock adds ten to every draft item.
+- Image upload stores a local data URL.
+- Disable sets active=false; disabled products are hidden in the student shop.
+- Out of Stock sets stock=0.
+- Delete asks: "Are you sure to delete this product?"
+- Add Product creates a new demo product with a generated timestamp ID.
+- Save sends the complete draft back to App.
+- App writes it to hsu-inventory.
+- Saved price, stock, image, enabled state, additions, and deletions persist
+  across view changes and browser reloads on the same browser.
+
+
+5.22 PICKUP SLOTS PAGE (/slots)
+-------------------------------
+Purpose:
+- Configure pickup times, locations, and capacity.
+
+UI/UX:
+- Date input.
+- Start-time and end-time controls.
+- Pickup-location input.
+- Add Slot button.
+- Table with editable time, location, capacity, booked count, status, and Delete.
+
+Logic:
+- New slots combine start and end into a displayed time range.
+- Existing time and location text can be modified.
+- Capacity cannot be intentionally set below booked through the input minimum.
+- Full is calculated when booked >= capacity.
+- Delete removes the time slot instead of merely disabling it.
+- Slot changes persist to hsu-slots.
+- Checkout reads the same slots, locations, booked values, and capacities.
+- Full slots cannot be selected in checkout.
+
+
+5.23 USERS PAGE (/users)
+------------------------
+Purpose:
+- Demonstrate user search and multi-role management.
+
+UI/UX:
+- User search.
+- User row with live avatar, identity, programme, student ID, and last login.
+- Student, Staff, and Admin role checkboxes.
+
+Logic:
+- Each role can be added or removed independently.
+- At least one role must remain.
+- Changes update the local user record.
+- Current prototype primarily demonstrates KC823 rather than a full user list.
+- No server-side permission enforcement occurs.
+
+
+5.24 DEVELOPER/API PAGE (/developer)
+------------------------------------
+Purpose:
+- Demonstrate how a protected student API could look.
+
+UI/UX:
+- Protected API warning.
+- Masked demo token.
+- Generate Token.
+- Test API.
+- Side-by-side unauthorized and authorized response examples.
+- Example curl command.
+
+Logic:
+- Generate Token changes only the visible masked suffix.
+- Test API renders a locally generated JSON response based on the demo user.
+- No endpoint, token signing, Bearer validation, or network request exists.
+
+
+5.25 AUDIT LOG PAGE (/audit)
+----------------------------
+Purpose:
+- Demonstrate an administrator audit-history interface.
+
+UI/UX:
+- Search/filter field.
+- Table columns for timestamp, user, action, target, and IP address.
+- Sample login, dashboard, order-status, restock, password, and role events.
+
+Logic:
+- Audit rows are fixed demo records.
+- Filtering matches translated action text.
+- Events are not generated automatically from actual app interactions.
+
+
+6. SHARED COMPONENT AND FUNCTION REFERENCE
+==========================================
+
+src/App.tsx
+-----------
+
+pageFromPath(path)
+- Removes the query string.
+- Finds the matching Page value from pagePaths.
+- Falls back to Home.
+
+Icon({name, size})
+- Renders reusable outline SVG paths from the local icon map.
+
+ThemeControl({theme, setTheme, t})
+- Renders Light, Dark, and System segmented buttons.
+- Defined as a reusable control; compact header settings use select elements.
+
+LanguageControl({lang, setLang, t})
+- Renders English and Traditional Chinese segmented buttons.
+
+Header(...)
+- Controls desktop navigation, notification dropdown, cart badge, account
+  button, account drawer, role navigation, and role switching.
+- Uses a ref plus a document pointer listener to close notifications on outside
+  click.
+
+MerchNotice({t})
+- Renders the merchandise purchasing notice.
+
+PurchaseInfo({t, catalog})
+- Renders location, office hours, payment, enquiry, and bag information.
+- Uses different copy for catalogue and product-detail contexts.
+
+isMerch(product)
+- Treats IDs of 100 or higher as HSU merchandise.
+
+productName(product, lang)
+- Returns English or Chinese as the primary product name.
+
+ProductCard(...)
+- Renders one product.
+- Handles favourite persistence, details opening, and adding to cart.
+
+Home(...)
+- Renders hero, categories, featured products, drop, and TS Stamp promotion.
+- Passes selected category into Shop navigation.
+
+Shop(...)
+- Maintains selected category and query.
+- Filters active products and renders catalogue/merch information.
+
+Empty({t})
+- Shared panda-based no-results state.
+
+ProductDetail(...)
+- Maintains option choice, quantity, and favourite state.
+- Displays different detail controls for tuck-shop and merchandise products.
+
+Cart(...)
+- Resolves cart IDs against shared inventory.
+- Calculates line totals and full order total.
+
+Checkout(...)
+- Maintains step, selected slot, selected payment, and cancellation state.
+- Prevents continuation when no pickup slot is available.
+
+Success(...)
+- Renders simulated confirmation, QR, fallback code, and pickup details.
+
+PickupQrGraphic()
+- Reusable decorative pickup QR SVG.
+
+Orders(...)
+- Filters orders by tab.
+- Handles cancellation, buy again, and pickup QR display.
+- Persists order changes.
+
+Login(...)
+- Legacy simple login component retained in App.tsx.
+- The active route uses AuthScreen from SuitePages.tsx instead.
+
+Switch(...)
+- Generic local toggle.
+- Optionally persists a Boolean and toggles an HTML class.
+
+Account(...)
+- Handles profile editing, image upload, wallet demo credit, password change,
+  session list, role switching, and local account deletion.
+
+Dashboard(...)
+- Uses one component for Staff and Admin variants.
+- Staff variant handles order stages and pickup verification.
+- Admin variant handles KPI display and low-stock restocking.
+- resetOrders restores initialOrders.
+
+BottomNav(...)
+- Renders responsive mobile navigation and cart badge.
+
+App()
+- Main state owner and page compositor.
+- Initializes demo seed and current user.
+- Owns language, theme, session, role view, orders, slots, notifications,
+  inventory, cart, selected product, checkout, and success state.
+- Connects page components to shared state.
+- Writes orders, notifications, and inventory to localStorage.
+- Synchronizes role view with role-specific routes.
+
+
+src/SuitePages.tsx
+------------------
+
+Field(...)
+- Shared form label, content, and error wrapper.
+
+Spinner()
+- Small loading indicator.
+
+EyeIcon({open})
+- Renders open-eye or crossed/closed-eye password icon.
+
+PasswordRules(...)
+- Calculates and displays live password requirements.
+
+GooglePicker(...)
+- Simulated Google account chooser.
+
+AuthScreen(...)
+- Routes login, register, forgot-password, and reset-password modes.
+
+AuthShell(...)
+- Shared authentication visual layout.
+
+LoginScreen(...)
+- Active login form and local credential validation.
+
+RegisterScreen(...)
+- Registration validation and local user creation.
+
+PasswordRecovery(...)
+- Simulated email, resend, reset, and local password-update flow.
+
+FeaturePage(...)
+- Dispatches feature routes to Notifications, Loyalty, Merch Drop, Friend
+  Order, Developer, Stock, Slots, Users, Audit, Favourites, or Search.
+
+PageHead(...)
+- Shared page-introduction heading.
+
+CatalogUtility(...)
+- Shared Search/Favourites result grid and favourite removal.
+
+NotificationsPage(...)
+- Manages tabs and read/unread persistence.
+
+LoyaltyPage(...)
+- Displays panda-head TS Stamps, badges, rules, and history.
+
+MerchDrop(...)
+- Runs the local countdown and shows low-stock merchandise.
+
+FriendOrder(...)
+- Builds the local gift pickup and email preview.
+
+DeveloperPage(...)
+- Generates masked token text and local API-response demonstration.
+
+StockPage(...)
+- Manages inventory draft, image uploads, add/delete, filters, stock/price
+  editing, and explicit save.
+
+SlotsPage(...)
+- Adds, edits, deletes, and persists pickup slots.
+
+UsersPage(...)
+- Searches the demo user and toggles Student/Staff/Admin roles.
+
+AuditPage(...)
+- Filters static translated audit events.
+
+
+src/demo.ts
+-----------
+
+readStore(key, fallback)
+- Parses JSON from localStorage.
+- Returns fallback if the key is missing or parsing fails.
+
+writeStore(key, value)
+- Serializes a value to localStorage.
+
+ensureDemoSeed()
+- On first use, writes the demo user, orders, slots, notifications, favourites,
+  and initial Student view.
+
+currentUser()
+- Returns the user matching hsu-session.
+- Falls back to the first stored user or demoUser.
+
+updateStoredUser(next)
+- Replaces the matching local user record.
+
+
+Other core files
+----------------
+
+src/catalog.ts
+- Defines CatalogProduct.
+- Uses Vite import.meta.glob to load local product images.
+- Stores the 56 imported product rows, category, bilingual names, price, stock,
+  local image, and original source image link.
+
+src/merch.ts
+- Defines Merch and the 15 HSU merchandise records.
+- Includes merchandise details, pickup restrictions, and style/size selectors.
+
+src/i18n.ts
+- Defines English and Traditional Chinese copy.
+- translator(lang) returns a translation function.
+- Supports placeholder interpolation such as quantities, names, and emails.
+
+src/Mascot.tsx
+- Renders the full, mark/head, line, and shop mascot variants.
+
+src/index.css
+- Contains colour variables, theme overrides, responsive breakpoints, layouts,
+  animation, component states, tables, modals, and accessibility-oriented
+  interaction styling.
+
+
+7. APPLICATION STATE AND LOGIC MODEL
+====================================
+
+Shared React state
+------------------
+- page: current route/page.
+- lang: en or zh.
+- theme: light, dark, or system.
+- user: active DemoUser.
+- loggedIn: based on hsu-session.
+- view: student, staff, or admin.
+- orders: current demo orders.
+- slots: pickup-slot records.
+- notifications: notification records.
+- inventory: combined products with editable stock/price/image/active state.
+- shopCategory: category selected before opening Shop.
+- cart: product ID -> quantity.
+- selected: product shown in Product Detail.
+- checkout: whether checkout overlay is open.
+- success: whether success overlay is open.
+
+Browser persistence keys
+------------------------
+hsu-demo
+- Indicates initial seed has run.
+
+hsu-users
+- Demo user records, passwords, roles, profile data, and avatar data URL.
+
+hsu-session
+- Current local user ID.
+
+hsu-auth
+- Local logged-in demonstration flag.
+
+hsu-view
+- Selected Student/Staff/Admin view.
+
+hsu-lang
+- en or zh.
+
+hsu-theme
+- light, dark, or system.
+
+hsu-orders
+- Order records and stage transitions.
+
+hsu-slots
+- Pickup times, location, booked count, and capacity.
+
+hsu-notifications
+- Notification content and read state.
+
+hsu-inventory
+- Saved inventory price, stock, image, enabled state, additions, and deletions.
+
+hsu-favs
+- Favourite product IDs.
+
+Additional switch keys
+- Some settings switches use their own local keys.
+
+Persistence behavior
+--------------------
+- Data persists only in the same browser storage.
+- It is not shared between devices, browsers, or users.
+- Clearing browser storage resets local data.
+- Uploaded images can consume localStorage capacity because they are data URLs.
+- localStorage is not secure and must not hold production passwords or tokens.
+
+
+8. DEMO DATA DETAILS
+====================
+
+Order stages
+------------
+The initial data includes orders in all five states:
+- PAID
+- PREPARING
+- READY
+- COLLECTED
+- CANCELLED
+
+Additional Staff Board examples include different slots, students, totals,
+payment labels, and pickup codes.
+
+Reset behavior
+--------------
+- "Reset demo orders" replaces current orders with initialOrders.
+- The reset is immediately stored in hsu-orders.
+- This allows the same demonstration to be repeated.
+
+Pickup slots
+------------
+- Six initial slots.
+- Locations include Lee Quo Wei Academic Building and S H Ho Academic Building.
+- One initial slot is full to demonstrate disabled checkout behavior.
+
+Notifications
+-------------
+- Six initial unread messages.
+- Types: order, stock, and loyalty.
+
+Inventory
+---------
+- Each imported tuck-shop product currently begins with demo stock 10.
+- Merchandise uses its own varied stock values.
+- Low-stock threshold defaults to 4.
+- Shared inventory merges saved overrides with source catalogue data.
+
+
+9. ACCESSIBILITY AND RESPONSIVE BEHAVIOR
+=======================================
+
+Accessibility features currently present
+----------------------------------------
+- Semantic buttons for interactive controls.
+- aria-label on icon-only buttons.
+- aria-expanded on notification and drawer triggers.
+- aria-pressed on selected favourites and payments.
+- role="status" or role="alert" for important feedback.
+- Keyboard-compatible native form inputs, selects, checkboxes, and buttons.
+- Disabled checkout controls for unavailable slots.
+- Visible active, focus-compatible, selected, warning, and error states.
+- Reduced-motion media query disables transitions and animation.
+- Images generally include product names as alt text where used in product UI.
+
+Responsive behavior
+-------------------
+- Desktop header simplifies at smaller widths.
+- Account control becomes icon-focused on mobile.
+- Fixed bottom navigation appears on mobile.
+- Product, settings, badge, and role layouts collapse to fewer columns.
+- Staff kanban remains horizontally scrollable.
+- Data tables retain minimum widths and can scroll.
+- Checkout summary is hidden on smaller screens to prioritize the main form.
+- Modals use near-full viewport width on mobile.
+
+Areas for future accessibility improvement
+------------------------------------------
+- Perform a full WCAG contrast audit.
+- Add systematic visible focus-ring styling.
+- Add focus trapping and focus return for every modal/drawer.
+- Add Escape-key dismissal consistently.
+- Announce route changes to screen readers.
+- Validate all uploaded image alt text.
+- Test with VoiceOver, NVDA, keyboard-only use, zoom, and high contrast.
+
+
+10. KNOWN PROTOTYPE LIMITATIONS
+===============================
+
+The application is intentionally front-end-only. The following functions are
+simulated and must not be described as production-ready:
+
+- Authentication and registration.
+- Google OAuth.
+- Password recovery email.
+- Gift email.
+- Payments.
+- QR scanning and QR security.
+- Wallet balance.
+- Stock reservation and concurrency.
+- Pickup capacity reservation.
+- Loyalty earning/redemption.
+- API token generation and protected API response.
+- Analytics values.
+- Audit events.
+- Session management.
+- Role authorization.
+- Account deletion outside localStorage.
+
+
+11. BACKEND AND INFRASTRUCTURE WORK NOT IMPLEMENTED
+===================================================
+
+This section preserves and organizes all content from the original
+FIGMA_CANNOT_DO.txt.
+
+AUTH
+----
+- Store passwords with bcrypt/Argon2 rather than localStorage.
+- Issue secure, HTTP-only session cookies or JWTs.
+- Configure real Google OAuth credentials and callback URLs.
+- Send real password-reset emails with expiring, single-use tokens.
+- Enforce username and email uniqueness in the database.
+
+DATABASE
+--------
+- Create durable schemas for users, roles, products, inventory, orders, slots,
+  payments, notifications, favourites, loyalty, and audit events.
+- Add a production seed/migration for KC823 only if appropriate for the
+  deployment environment.
+- Add transactions and concurrency controls for stock, slot capacity, and
+  order status.
+
+API
+---
+- Implement POST /api/auth/login, /register, /logout, /forgot-password, and
+  /reset-password.
+- Implement GET /api/students with Bearer-token validation and 401/200 behavior.
+- Implement product, stock, order, pickup-slot, notification, favourite,
+  loyalty, user, and audit endpoints.
+- Implement PATCH /api/orders/:id/status and secure pickup verification.
+- Implement simulated-payment replacement endpoints only after selecting a
+  real provider.
+
+SECURITY
+--------
+- Add server-side authorization for student, staff, and admin roles.
+- Add rate limiting, CSRF protection, validation, sanitization, secure headers,
+  HTTPS, secret rotation, and audit retention.
+- Never trust role, price, stock, wallet, payment, or order state supplied by
+  the browser.
+
+EMAIL AND EXTERNAL SERVICES
+---------------------------
+- Connect a transactional email provider for password recovery and gift pickup.
+- Configure sender-domain verification and email templates.
+- Add delivery, bounce, retry, and abuse handling.
+- Connect real payment providers only after security and compliance review.
+- Replace decorative QR artwork with signed, expiring pickup credentials.
+
+OPERATIONS / SUBMISSION
+-----------------------
+- Configure production hosting, monitoring, backups, logs, and environment
+  secrets.
+- Write the final deployment/readme documentation and installation steps.
+- Record the required demonstration video.
+
+
+12. RECOMMENDED PRODUCTION LOGIC
+================================
+
+Authentication
+--------------
+1. Browser submits credentials over HTTPS.
+2. Server validates input and compares a password hash.
+3. Server returns a secure HTTP-only session cookie.
+4. Server checks role authorization on every protected request.
+
+Checkout
+--------
+1. Server recalculates all prices from database records.
+2. Server verifies product availability.
+3. Server reserves stock and slot capacity in a transaction.
+4. Server creates a pending order.
+5. Payment provider confirms payment through a signed callback/webhook.
+6. Server marks the order paid and sends confirmation.
+
+Pickup
+------
+1. Server issues a signed, expiring pickup token.
+2. Staff scanner validates the token server-side.
+3. Server checks order status and prevents replay.
+4. Collection and inventory events are written atomically to an audit log.
+
+Stock management
+----------------
+1. Admin changes are validated server-side.
+2. Product and stock updates are stored in a database.
+3. Image uploads use validated object storage.
+4. Every edit creates an audit event.
+
+Loyalty
+-------
+1. Eligible paid/collected order value is accumulated server-side.
+2. One stamp is awarded per HK$25 cumulative eligible spending.
+3. Redemption occurs in a transaction and cannot be duplicated.
+
+
+13. SUGGESTED DEMONSTRATION SCRIPT
+==================================
+
+1. Log in with s123456@hsu.edu.hk and Tuck1234.
+2. Show English/Traditional Chinese and Light/Dark/System controls.
+3. Use a Home category card to open a prefiltered Shop view.
+4. Favourite a product from its card and Product Detail.
+5. Confirm the item appears in My Favourites.
+6. Add products to Cart.
+7. Demonstrate a full pickup slot being disabled.
+8. Select a different pickup slot and payment method.
+9. Complete the simulated checkout and show the pickup code.
+10. Open Orders and show status tabs, cancellation, pickup QR, and Buy Again.
+11. Open TS Stamp and explain HK$25 per stamp and the panda-head progress.
+12. Upload a profile image and show it in the header and drawer.
+13. Switch to Staff.
+14. Move orders through Paid, Preparing, Ready, and Verify & Collect.
+15. Use Reset Demo Orders to restore the demonstration.
+16. Edit a pickup slot and show the checkout connection.
+17. Switch to Admin.
+18. Edit stock, price, and image; press Save.
+19. Switch away and back to demonstrate persistence.
+20. Show role checkboxes, API demonstration, and Audit Log.
+21. End by explaining that all security-sensitive functions are simulated and
+    require the production work listed in this document.
+
+
+14. FINAL REPORT SUMMARY
+========================
+
+The HSU Tuck Shop prototype demonstrates a complete multi-role campus retail
+experience in one responsive bilingual interface. It includes product
+discovery, favourites, cart, pickup-slot selection, simulated payment, order
+tracking, TS Stamp rewards, staff fulfilment, inventory editing, slot
+management, user roles, analytics, developer examples, and audit presentation.
+
+The prototype is effective for UI/UX evaluation and a college project
+demonstration because state changes are interactive and many values persist in
+the same browser. However, localStorage and React state are not replacements
+for authentication, authorization, databases, transactions, payment services,
+email delivery, or secure APIs. Production deployment requires the backend,
+security, infrastructure, and operational work listed above.

@@ -1,0 +1,10 @@
+{
+  "description": "Browse and order snacks, drinks, stationery, ice cream, and HSU merchandise online, then pay and collect with a QR code—plus staff tools for orders and stock.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
